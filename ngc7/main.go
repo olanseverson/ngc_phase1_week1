@@ -1,64 +1,64 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io"
-	"log"
-	"net/http"
 	"os"
+	"regexp"
+	"strings"
 	"sync"
 )
 
 // ++++++++++++++++++ SOAL 5 +++++++++++++++++
-func downloadFile(url string, destination string) {
-	outFile, err := os.Create(destination)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer outFile.Close()
+// func downloadFile(url string, destination string) {
+// 	outFile, err := os.Create(destination)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return
+// 	}
+// 	defer outFile.Close()
 
-	response, err := http.Get(url)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	defer response.Body.Close()
+// 	response, err := http.Get(url)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return
+// 	}
+// 	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
-		log.Printf("server returned non-200 status code : %v\n", response.StatusCode)
-		return
-	}
+// 	if response.StatusCode != http.StatusOK {
+// 		log.Printf("server returned non-200 status code : %v\n", response.StatusCode)
+// 		return
+// 	}
 
-	_, err = io.Copy(outFile, response.Body)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-}
+// 	_, err = io.Copy(outFile, response.Body)
+// 	if err != nil {
+// 		log.Println(err)
+// 		return
+// 	}
+// }
 
-func main() {
-	var wg sync.WaitGroup
+// func main() {
+// 	var wg sync.WaitGroup
 
-	link := []string{
-		"https://github.com/olanseverson/shashin/blob/master/asset/images/jpeg/1.jpg",
-		"https://github.com/olanseverson/shashin/blob/master/asset/images/jpeg/2.jpg",
-		"https://github.com/olanseverson/shashin/blob/master/asset/images/jpeg/3.jpg",
-	}
+// 	link := []string{
+// 		"https://github.com/olanseverson/shashin/blob/master/asset/images/jpeg/1.jpg",
+// 		"https://github.com/olanseverson/shashin/blob/master/asset/images/jpeg/2.jpg",
+// 		"https://github.com/olanseverson/shashin/blob/master/asset/images/jpeg/3.jpg",
+// 	}
 
-	for i, v := range link {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			path := fmt.Sprintf("./download/%d.jpg", i)
-			fmt.Println(v, path)
-			downloadFile(v, path)
-		}()
-	}
+// 	for i, v := range link {
+// 		wg.Add(1)
+// 		go func() {
+// 			defer wg.Done()
+// 			path := fmt.Sprintf("./download/%d.jpg", i)
+// 			fmt.Println(v, path)
+// 			downloadFile(v, path)
+// 		}()
+// 	}
 
-	wg.Wait()
-	fmt.Println("all the links downloaded succesfuly")
-}
+// 	wg.Wait()
+// 	fmt.Println("all the links downloaded succesfuly")
+// }
 
 // ++++++++++++++++++ SOAL 4 +++++++++++++++++
 // func scheduleTask(task func(float64), wg *sync.WaitGroup, param float64) {
@@ -157,41 +157,41 @@ func main() {
 
 // ++++++++++++++++++ SOAL 2 +++++++++++++++++
 
-// func acronimify(input string) {
-// 	inputParsed := regexp.MustCompile(`[^a-zA-Z ]+`).ReplaceAllString(input, " ") // remove the nonchar
-// 	// fmt.Println(inputParsed)
-// 	slice := strings.Split(inputParsed, " ")
-// 	// fmt.Println(len(slice))
-// 	var out []string
-// 	for i := 0; i < len(slice); i++ {
-// 		out = append(out, string(slice[i][0]))
-// 	}
-// 	fmt.Println(input, " - ", strings.Join(out, ""))
-// }
+func acronimify(input string) {
+	inputParsed := regexp.MustCompile(`[^a-zA-Z ]+`).ReplaceAllString(input, " ") // remove the nonchar
+	// fmt.Println(inputParsed)
+	slice := strings.Split(inputParsed, " ")
+	// fmt.Println(len(slice))
+	var out []string
+	for i := 0; i < len(slice); i++ {
+		out = append(out, string(slice[i][0]))
+	}
+	fmt.Println(input, " - ", strings.Join(out, ""))
+}
 
-// func main() {
-// 	var wg sync.WaitGroup
-// 	for {
-// 		fmt.Print("input the text: ")
-// 		reader := bufio.NewReader(os.Stdin)
-// 		input, _ := reader.ReadString('\n')
-// 		input = strings.TrimSpace(input)
-// 		fmt.Println(input)
-// 		if input == "done" {
-// 			break
-// 		}
+func main() {
+	var wg sync.WaitGroup
+	for {
+		fmt.Print("input the text: ")
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+		input = strings.TrimSpace(input)
+		fmt.Println(input)
+		if input == "done" {
+			break
+		}
 
-// 		wg.Add(1)
-// 		go func(in string) {
-// 			defer wg.Done()
-// 			acronimify(in)
-// 		}(input)
-// 	}
+		wg.Add(1)
+		go func(in string) {
+			defer wg.Done()
+			acronimify(in)
+		}(input)
+	}
 
-// 	wg.Wait()
-// 	fmt.Println("All the process completed")
+	wg.Wait()
+	fmt.Println("All the process completed")
 
-// }
+}
 
 // ++++++++++++++++++ SOAL 1 +++++++++++++++++
 // func fibonacci(x int) int {
